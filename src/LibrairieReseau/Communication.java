@@ -83,10 +83,10 @@ public class Communication {
 
         envoyerDonnees(sb.toString());
     }
-    
+
     /**
      * Sert à alerter un joueur de la validité de son coup après une pioche.
-     * 
+     *
      * @param estAccepte booléen représentant la validité de la pioche.
      */
     public void envoyerAcceptationPioche(boolean estAccepte) {
@@ -101,11 +101,14 @@ public class Communication {
         envoyerDonnees(sb.toString());
     }
     
-
-    public void envoyerResultatFinDePartie(ResultatFinDePartie resultatFinDePartie){
+    /**
+     * Envoie le résultat de fin de partie (victoire, défaite, égalité).
+     * @param resultatFinDePartie une énumération avec pour valeurs possibles : Victoire, Défaite, égalité
+     */
+    public void envoyerResultatFinDePartie(ResultatFinDePartie resultatFinDePartie) {
         StringBuilder sb = new StringBuilder();
 
-        switch(resultatFinDePartie){
+        switch (resultatFinDePartie) {
             case DEFAITE:
                 sb.append(CodeMessage.DEFAITE);
                 break;
@@ -117,6 +120,79 @@ public class Communication {
                 break;
         }
 
+        envoyerDonnees(sb.toString());
+    }
+
+    /**
+     * Joue la carte indicée par indiceCarte dans la main sur le plateau.
+     *
+     * @param indiceCarte l'indice de la carte dans la main du joueur.
+     */
+    public void jouerCoup(int indiceCarte) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.JOUER);
+        sb.append(indiceCarte);
+        envoyerDonnees(sb.toString());
+    }
+
+    /**
+     * Pioche la carte de la pile d'indice indicePile.
+     *
+     * @param indicePile l'indice de la pile que le joueur a choisi.
+     */
+    public void piocher(int indicePile) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.JOUER);
+        sb.append(indicePile);
+        envoyerDonnees(sb.toString());
+    }
+
+    /**
+     * Indique que le joueur souhaite abandonner.
+     */
+    public void capituler() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.CAPITULER);
+        envoyerDonnees(sb.toString());
+    }
+
+    /**
+     * Indique le joueur souhaite annuler son coup.
+     */
+    public void annuler() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.ANNULER);
+        envoyerDonnees(sb.toString());
+    }
+
+    /**
+     * Indique que le joueur souhaite sauvegarder la partie courante.
+     */
+    public void sauvegarder() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.SAUVEGARDER);
+        envoyerDonnees(sb.toString());
+    }
+
+    /**
+     * Indique que le joueur souhaite charger la partie.
+     */
+    public void charger() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.CHARGER);
+        envoyerDonnees(sb.toString());
+    }
+
+    /**
+     * Envoie un message dans le chat.
+     *
+     * @param message le message envoyé par le joueur.
+     */
+    public void envoyerMessageChat(String message) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.MESSAGE_CHAT);
+        sb.append((byte) message.length());
+        sb.append(message);
         envoyerDonnees(sb.toString());
     }
 
