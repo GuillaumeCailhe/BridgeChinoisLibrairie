@@ -20,9 +20,11 @@ public class MessageString extends Message {
         super(code,fluxEntrant);
         int taille = fluxEntrant.readByte();
         donnees = "";
+        System.out.println("test");
         for(int i=0; i<taille; i++){
             donnees += fluxEntrant.readChar();
         }
+        System.out.println(donnees);
     }
     
 }

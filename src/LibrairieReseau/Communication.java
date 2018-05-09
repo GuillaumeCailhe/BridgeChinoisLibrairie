@@ -14,12 +14,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Pepefab
  */
-public class Communication {
+public class Communication implements Runnable {
 
     Socket client;
     DataInputStream fluxEntrant;
@@ -39,6 +41,67 @@ public class Communication {
         this.buffer = new LinkedList<Message>();
     }
 
+    @Override
+    public void run() {
+        while(true){
+            try {
+                recevoirDonnees();
+            } catch (IOException ex) {
+                Logger.getLogger(Communication.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    
+// <editor-fold desc="Lancer une partie">
+    /**
+     * Indique que le joueur souhaite lancer une partie PVP.
+     */
+    public void envoyerJcJ() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.PARTIE_JCJ);
+        envoyerDonnees(sb.toString());
+    }
+    
+    /**
+     * Indique que le joueur souhaite lancer une partie contre IA facile.
+     */
+    public void envoyerJcFacile() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.PARTIE_JCFACILE);
+        envoyerDonnees(sb.toString());
+    }
+    
+    /**
+     * Indique que le joueur souhaite lancer une partie contre IA intermédiaire.
+     */
+    public void envoyerJcIntermediaire() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.PARTIE_JCINTERMEDIAIRE);
+        envoyerDonnees(sb.toString());
+    }
+    
+    /**
+     * Indique que le joueur souhaite lancer une partie contre IA diffilce.
+     */
+    public void envoyerJcDifficile() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.PARTIE_JCDIFFICILE);
+        envoyerDonnees(sb.toString());
+    }
+    
+    /**
+     * Indique que le joueur souhaite charger sa sauvegarde (enregistré côté serveur, unique ?).
+     */
+    public void envoyerChargerPartie() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(CodeMessage.PARTIE_CHARGER);
+        envoyerDonnees(sb.toString());
+    }
+    
+// </editor-fold>
+    
+// <editor-fold desc="Initialisation partie">
     /**
      * Sert à envoyer le pseudo de l'adversaire
      *
@@ -46,7 +109,7 @@ public class Communication {
      */
     public void envoyerPseudo(String pseudo) {
         StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.PSEUDO);
+        sb.append(CodeMessage.PSEUDO.getCode());
         sb.append((byte) pseudo.length());
         sb.append(pseudo);
         envoyerDonnees(sb.toString());
@@ -66,6 +129,7 @@ public class Communication {
         }
         envoyerDonnees(sb.toString());
     }
+// </editor-fold>
 
     /**
      * Sert à alerter un joueur de la validité de son coup.
@@ -128,7 +192,7 @@ public class Communication {
      *
      * @param indiceCarte l'indice de la carte dans la main du joueur.
      */
-    public void jouerCoup(int indiceCarte) {
+    public void envoyerCoup(int indiceCarte) {
         StringBuilder sb = new StringBuilder();
         sb.append(CodeMessage.JOUER);
         sb.append(indiceCarte);
@@ -140,7 +204,7 @@ public class Communication {
      *
      * @param indicePile l'indice de la pile que le joueur a choisi.
      */
-    public void piocher(int indicePile) {
+    public void envoyerPioche(int indicePile) {
         StringBuilder sb = new StringBuilder();
         sb.append(CodeMessage.JOUER);
         sb.append(indicePile);
@@ -150,7 +214,7 @@ public class Communication {
     /**
      * Indique que le joueur souhaite abandonner.
      */
-    public void capituler() {
+    public void envoyerCapituler() {
         StringBuilder sb = new StringBuilder();
         sb.append(CodeMessage.CAPITULER);
         envoyerDonnees(sb.toString());
@@ -159,7 +223,7 @@ public class Communication {
     /**
      * Indique le joueur souhaite annuler son coup.
      */
-    public void annuler() {
+    public void envoyerAnnuler() {
         StringBuilder sb = new StringBuilder();
         sb.append(CodeMessage.ANNULER);
         envoyerDonnees(sb.toString());
@@ -168,21 +232,14 @@ public class Communication {
     /**
      * Indique que le joueur souhaite sauvegarder la partie courante.
      */
-    public void sauvegarder() {
+    public void envoyerSauvegarder() {
         StringBuilder sb = new StringBuilder();
         sb.append(CodeMessage.SAUVEGARDER);
         envoyerDonnees(sb.toString());
     }
 
-    /**
-     * Indique que le joueur souhaite charger la partie.
-     */
-    public void charger() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.CHARGER);
-        envoyerDonnees(sb.toString());
-    }
 
+    
     /**
      * Envoie un message dans le chat.
      *
@@ -198,6 +255,7 @@ public class Communication {
 
     private void envoyerDonnees(String donnees) {
         try {
+            System.out.println(donnees);
             fluxSortant.writeChars(donnees);
         } catch (Exception e) {
             throw new java.lang.Error("Erreur d'envoi de données");
@@ -205,45 +263,69 @@ public class Communication {
     }
 
     public void recevoirDonnees() throws IOException {
-        CodeMessage code = CodeMessage.values()[fluxEntrant.readByte()];
-        Message msg;
-        switch (code) {
-            case PSEUDO:
-                msg = new MessageString(code, fluxEntrant);
-            case MAIN:
-                msg = new MessageEntier(code, fluxEntrant);
-            case JOUER:
-                msg = new MessageEntier(code, fluxEntrant);
-            case JOUER_OK:
-                msg = new Message(code, fluxEntrant);
-            case JOUER_KO:
-                msg = new Message(code, fluxEntrant);
-            case PIOCHER:
-                msg = new MessageEntier(code, fluxEntrant);
-            case PIOCHER_OK:
-                msg = new Message(code, fluxEntrant);
-            case PIOCHER_KO:
-                msg = new Message(code, fluxEntrant);
-            case CAPITULER:
-                msg = new Message(code, fluxEntrant);
-            case ANNULER:
-                msg = new Message(code, fluxEntrant);
-            case SAUVEGARDER:
-                msg = new Message(code, fluxEntrant);
-            case CHARGER:
-                msg = new Message(code, fluxEntrant);
-            case VICTOIRE:
-                msg = new Message(code, fluxEntrant);
-            case DEFAITE:
-                msg = new Message(code, fluxEntrant);
-            case EGALITE:
-                msg = new Message(code, fluxEntrant);
-            case MESSAGE_CHAT:
-                msg = new MessageString(code, fluxEntrant);
-            default:
-                msg = null;
+        if(fluxEntrant.available() > 0){
+            CodeMessage code = CodeMessage.values()[fluxEntrant.readByte()];
+            Message msg;
+            switch (code) {
+                case PSEUDO:
+                    msg = new MessageString(code, fluxEntrant);
+                case MAIN:
+                    msg = new MessageEntier(code, fluxEntrant);
+                case JOUER:
+                    msg = new MessageEntier(code, fluxEntrant);
+                case JOUER_OK:
+                    msg = new Message(code, fluxEntrant);
+                case JOUER_KO:
+                    msg = new Message(code, fluxEntrant);
+                case PIOCHER:
+                    msg = new MessageEntier(code, fluxEntrant);
+                case PIOCHER_OK:
+                    msg = new Message(code, fluxEntrant);
+                case PIOCHER_KO:
+                    msg = new Message(code, fluxEntrant);
+                case CAPITULER:
+                    msg = new Message(code, fluxEntrant);
+                case ANNULER:
+                    msg = new Message(code, fluxEntrant);
+                case SAUVEGARDER:
+                    msg = new Message(code, fluxEntrant);
+                case VICTOIRE:
+                    msg = new Message(code, fluxEntrant);
+                case DEFAITE:
+                    msg = new Message(code, fluxEntrant);
+                case EGALITE:
+                    msg = new Message(code, fluxEntrant);
+                case MESSAGE_CHAT:
+                    msg = new MessageString(code, fluxEntrant);
+                case PARTIE_JCJ:
+                    msg = new Message(code, fluxEntrant);
+                case PARTIE_JCFACILE:
+                    msg = new Message(code, fluxEntrant);
+                case PARTIE_JCINTERMEDIAIRE:
+                    msg = new Message(code, fluxEntrant);
+                case PARTIE_JCDIFFICILE:
+                    msg = new Message(code, fluxEntrant);
+                case PARTIE_CHARGER:
+                    msg = new Message(code, fluxEntrant);
+                default:
+                    msg = null;
+            }
+            this.buffer.add(msg);
         }
-        this.buffer.add(msg);
     }
+    
+    public Message getMessage(){
+        if(buffer.size() > 0){
+            return buffer.remove();
+        } else {
+            return null;
+        }
+    }
+    
+    public Socket getSocket(){
+        return client;
+    }
+
+
 
 }

@@ -21,11 +21,15 @@ public enum CodeMessage {
     CAPITULER((byte) 8),
     ANNULER((byte) 9),
     SAUVEGARDER((byte) 10),
-    CHARGER((byte) 11),
     VICTOIRE((byte) 12),
     DEFAITE((byte) 13),
     EGALITE((byte) 14),
-    MESSAGE_CHAT((byte) 15);
+    MESSAGE_CHAT((byte) 15),
+    PARTIE_JCJ((byte) 100),
+    PARTIE_JCFACILE((byte) 101),
+    PARTIE_JCINTERMEDIAIRE((byte) 102),
+    PARTIE_JCDIFFICILE((byte) 103),
+    PARTIE_CHARGER((byte) 104);
     
     private byte code;
 

@@ -18,6 +18,15 @@ public class Message {
     
     public Message(CodeMessage code, DataInputStream fluxEntrant){
         this.code = code;
+        this.donnees = null;
+    }
+ 
+    public CodeMessage getCode(){
+        return code;
+    }
+    
+    public Object getDonnees(){
+        return donnees;
     }
     
 }
