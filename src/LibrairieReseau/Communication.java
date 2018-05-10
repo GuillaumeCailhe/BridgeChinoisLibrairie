@@ -267,46 +267,64 @@ public class Communication implements Runnable {
             CodeMessage code = CodeMessage.values()[fluxEntrant.readByte()];
             Message msg;
             switch (code) {
-                case PSEUDO:
-                    msg = new MessageString(code, fluxEntrant);
-                case MAIN:
-                    msg = new MessageEntier(code, fluxEntrant);
-                case JOUER:
-                    msg = new MessageEntier(code, fluxEntrant);
-                case JOUER_OK:
-                    msg = new Message(code, fluxEntrant);
-                case JOUER_KO:
-                    msg = new Message(code, fluxEntrant);
-                case PIOCHER:
-                    msg = new MessageEntier(code, fluxEntrant);
-                case PIOCHER_OK:
-                    msg = new Message(code, fluxEntrant);
-                case PIOCHER_KO:
-                    msg = new Message(code, fluxEntrant);
-                case CAPITULER:
-                    msg = new Message(code, fluxEntrant);
-                case ANNULER:
-                    msg = new Message(code, fluxEntrant);
-                case SAUVEGARDER:
-                    msg = new Message(code, fluxEntrant);
-                case VICTOIRE:
-                    msg = new Message(code, fluxEntrant);
-                case DEFAITE:
-                    msg = new Message(code, fluxEntrant);
-                case EGALITE:
-                    msg = new Message(code, fluxEntrant);
-                case MESSAGE_CHAT:
-                    msg = new MessageString(code, fluxEntrant);
                 case PARTIE_JCJ:
-                    msg = new Message(code, fluxEntrant);
+                    msg = new Message(code,fluxEntrant);
                 case PARTIE_JCFACILE:
-                    msg = new Message(code, fluxEntrant);
+                    msg = new Message(code,fluxEntrant);
                 case PARTIE_JCINTERMEDIAIRE:
-                    msg = new Message(code, fluxEntrant);
+                    msg = new Message(code,fluxEntrant);
                 case PARTIE_JCDIFFICILE:
-                    msg = new Message(code, fluxEntrant);
+                    msg = new Message(code,fluxEntrant);
                 case PARTIE_CHARGER:
-                    msg = new Message(code, fluxEntrant);
+                    msg = new Message(code,fluxEntrant);
+                case PARTIE_DEMARRER:
+                    msg = new Message(code,fluxEntrant);
+                case PSEUDO:
+                    msg = new MessageString(code,fluxEntrant);
+                case MAIN:
+                    msg = new MessageCartes(code,fluxEntrant);
+                case PILES:
+                    msg = new MessageCartes(code,fluxEntrant);
+                case TOUR_OK:
+                    msg = new Message(code,fluxEntrant);
+                case TOUR_KO:
+                    msg = new Message(code,fluxEntrant);
+                case VICTOIRE_MANCHE:
+                    msg = new Message(code,fluxEntrant);
+                case EGALITE_MANCHE:
+                    msg = new Message(code,fluxEntrant);
+                case DEFAITE_MANCHE:
+                    msg = new Message(code,fluxEntrant);
+                case JOUER:
+                    msg = new MessageEntier(code,fluxEntrant);
+                case JOUER_OK:
+                    msg = new Message(code,fluxEntrant);
+                case JOUER_KO:
+                    msg = new Message(code,fluxEntrant);
+                case PIOCHER:
+                    msg = new MessageEntier(code,fluxEntrant);
+                case PIOCHER_OK:
+                    msg = new Message(code,fluxEntrant);
+                case PIOCHER_KO:
+                    msg = new Message(code,fluxEntrant);
+                case CAPITULER_MANCHE:
+                    msg = new Message(code,fluxEntrant);
+                case CAPITULER_PARTIE:
+                    msg = new Message(code,fluxEntrant);
+                case SAUVEGARDER:
+                    msg = new Message(code,fluxEntrant);
+                case SAUVEGARDER_OK:
+                    msg = new Message(code,fluxEntrant);
+                case SAUVEGARDER_KO:
+                    msg = new Message(code,fluxEntrant);
+                case ANNULER:
+                    msg = new Message(code,fluxEntrant);
+                case ANNULER_OK:
+                    msg = new Message(code,fluxEntrant);
+                case ANNULER_KO:
+                    msg = new Message(code,fluxEntrant);
+                case MESSAGE_CHAT:
+                    msg = new MessageString(code,fluxEntrant);
                 default:
                     msg = null;
             }
