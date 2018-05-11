@@ -101,67 +101,100 @@ public class Communication implements Runnable {
             switch (code) {
                 case PARTIE_JCJ:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case PARTIE_JCFACILE:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case PARTIE_JCINTERMEDIAIRE:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case PARTIE_JCDIFFICILE:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case PARTIE_CHARGER:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case PARTIE_DEMARRER:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case PSEUDO:
                     msg = new MessageString(code,fluxEntrant);
+                    break;
                 case MAIN:
                     msg = new MessageCartes(code,fluxEntrant);
+                    break;
                 case PILES:
                     msg = new MessageCartes(code,fluxEntrant);
+                    break;
                 case TOUR_OK:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case TOUR_KO:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case VICTOIRE_MANCHE:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case EGALITE_MANCHE:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case DEFAITE_MANCHE:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case JOUER:
                     msg = new MessageEntier(code,fluxEntrant);
+                    break;
                 case JOUER_OK:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case JOUER_KO:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case PIOCHER:
                     msg = new MessageEntier(code,fluxEntrant);
+                    break;
                 case PIOCHER_OK:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case PIOCHER_KO:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case CAPITULER_MANCHE:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case CAPITULER_PARTIE:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case SAUVEGARDER:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case SAUVEGARDER_OK:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case SAUVEGARDER_KO:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case ANNULER:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case ANNULER_OK:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case ANNULER_KO:
                     msg = new Message(code,fluxEntrant);
+                    break;
                 case MESSAGE_CHAT:
                     msg = new MessageString(code,fluxEntrant);
+                    break;
                 default:
-                    msg = null;
+                    throw new Error("Code de message indécodable");
             }
             this.buffer.add(msg);
         }
+    }
+    
+    public int getNbMessages(){
+        return buffer.size();
     }
     
     public Message getMessage(){
