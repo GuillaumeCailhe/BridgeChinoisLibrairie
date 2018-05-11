@@ -13,8 +13,8 @@ import java.io.DataInputStream;
  */
 public class Message {
     
-    CodeMessage code;
-    Object donnees;
+    private CodeMessage code;
+    private Object donnees;
     
     public Message(CodeMessage code, DataInputStream fluxEntrant){
         this.code = code;

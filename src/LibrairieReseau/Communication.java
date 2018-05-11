@@ -52,214 +52,46 @@ public class Communication implements Runnable {
         }
     }
     
-    
-// <editor-fold desc="Lancer une partie">
-    /**
-     * Indique que le joueur souhaite lancer une partie PVP.
-     */
-    public void envoyerJcJ() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.PARTIE_JCJ);
-        envoyerDonnees(sb.toString());
+    public void envoyer(CodeMessage code) throws IOException{
+        byte[] donnees = new byte[1];
+        donnees[0] = code.getCode();
+        envoyerDonnees(donnees);
     }
     
-    /**
-     * Indique que le joueur souhaite lancer une partie contre IA facile.
-     */
-    public void envoyerJcFacile() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.PARTIE_JCFACILE);
-        envoyerDonnees(sb.toString());
-    }
+    public void envoyerEntier(CodeMessage code, byte entier) throws IOException{
+        byte[] donnees = new byte[2];
+        donnees[0] = code.getCode();
+        donnees[1] = entier;
+        envoyerDonnees(donnees);
+    }    
     
-    /**
-     * Indique que le joueur souhaite lancer une partie contre IA intermédiaire.
-     */
-    public void envoyerJcIntermediaire() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.PARTIE_JCINTERMEDIAIRE);
-        envoyerDonnees(sb.toString());
-    }
-    
-    /**
-     * Indique que le joueur souhaite lancer une partie contre IA diffilce.
-     */
-    public void envoyerJcDifficile() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.PARTIE_JCDIFFICILE);
-        envoyerDonnees(sb.toString());
-    }
-    
-    /**
-     * Indique que le joueur souhaite charger sa sauvegarde (enregistré côté serveur, unique ?).
-     */
-    public void envoyerChargerPartie() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.PARTIE_CHARGER);
-        envoyerDonnees(sb.toString());
-    }
-    
-// </editor-fold>
-    
-// <editor-fold desc="Initialisation partie">
-    /**
-     * Sert à envoyer le pseudo de l'adversaire
-     *
-     * @param pseudo
-     */
-    public void envoyerPseudo(String pseudo) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.PSEUDO.getCode());
-        sb.append((byte) pseudo.length());
-        sb.append(pseudo);
-        envoyerDonnees(sb.toString());
-    }
-
-    /**
-     * Sert à envoyer la main au début d'une manche
-     *
-     * @param main
-     */
-    public void envoyerMain(ArrayList<Carte> main) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.MAIN);
-        for (Carte c : main) {
-            sb.append((byte) c.getValeur().getValeur());
-            sb.append((byte) c.getSymbole().getSymbole());
+    public void envoyerString(CodeMessage code, String chaine) throws IOException{
+        byte[] donnees = new byte[1];
+        donnees[0] = code.getCode();
+        donnees[1] = (byte) chaine.getBytes().length;
+        int i = 2;
+        for(byte b : chaine.getBytes()){
+            donnees[i] = b;
+            i++;
         }
-        envoyerDonnees(sb.toString());
-    }
-// </editor-fold>
-
-    /**
-     * Sert à alerter un joueur de la validité de son coup.
-     *
-     * @param estAccepte booléen représentant la validité du coup.
-     */
-    public void envoyerAcceptationCoup(boolean estAccepte) {
-        StringBuilder sb = new StringBuilder();
-
-        if (estAccepte) {
-            sb.append(CodeMessage.JOUER_OK);
-        } else {
-            sb.append(CodeMessage.JOUER_KO);
+        envoyerDonnees(donnees);
+    }    
+    
+    public void envoyerCartes(CodeMessage code, ArrayList<Carte> cartes) throws IOException{
+        byte[] donnees = new byte[2+cartes.size()*2];
+        donnees[0] = code.getCode();
+        donnees[1] = (byte) cartes.size();
+        int i = 2;
+        for(Carte c : cartes){
+            donnees[i] = (byte) c.getValeur().getValeur();
+            donnees[i+1] = (byte) c.getSymbole().getSymbole();
+            i++;
         }
-
-        envoyerDonnees(sb.toString());
-    }
-
-    /**
-     * Sert à alerter un joueur de la validité de son coup après une pioche.
-     *
-     * @param estAccepte booléen représentant la validité de la pioche.
-     */
-    public void envoyerAcceptationPioche(boolean estAccepte) {
-        StringBuilder sb = new StringBuilder();
-
-        if (estAccepte) {
-            sb.append(CodeMessage.PIOCHER_OK);
-        } else {
-            sb.append(CodeMessage.PIOCHER_KO);
-        }
-
-        envoyerDonnees(sb.toString());
+        envoyerDonnees(donnees);
     }
     
-    /**
-     * Envoie le résultat de fin de partie (victoire, défaite, égalité).
-     * @param resultatFinDePartie une énumération avec pour valeurs possibles : Victoire, Défaite, égalité
-     */
-    public void envoyerResultatFinDePartie(ResultatFinDePartie resultatFinDePartie) {
-        StringBuilder sb = new StringBuilder();
-
-        switch (resultatFinDePartie) {
-            case DEFAITE:
-                sb.append(CodeMessage.DEFAITE);
-                break;
-            case VICTOIRE:
-                sb.append(CodeMessage.DEFAITE);
-                break;
-            case EGALITE:
-                sb.append(CodeMessage.EGALITE);
-                break;
-        }
-
-        envoyerDonnees(sb.toString());
-    }
-
-    /**
-     * Joue la carte indicée par indiceCarte dans la main sur le plateau.
-     *
-     * @param indiceCarte l'indice de la carte dans la main du joueur.
-     */
-    public void envoyerCoup(int indiceCarte) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.JOUER);
-        sb.append(indiceCarte);
-        envoyerDonnees(sb.toString());
-    }
-
-    /**
-     * Pioche la carte de la pile d'indice indicePile.
-     *
-     * @param indicePile l'indice de la pile que le joueur a choisi.
-     */
-    public void envoyerPioche(int indicePile) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.JOUER);
-        sb.append(indicePile);
-        envoyerDonnees(sb.toString());
-    }
-
-    /**
-     * Indique que le joueur souhaite abandonner.
-     */
-    public void envoyerCapituler() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.CAPITULER);
-        envoyerDonnees(sb.toString());
-    }
-
-    /**
-     * Indique le joueur souhaite annuler son coup.
-     */
-    public void envoyerAnnuler() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.ANNULER);
-        envoyerDonnees(sb.toString());
-    }
-
-    /**
-     * Indique que le joueur souhaite sauvegarder la partie courante.
-     */
-    public void envoyerSauvegarder() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.SAUVEGARDER);
-        envoyerDonnees(sb.toString());
-    }
-
-
-    
-    /**
-     * Envoie un message dans le chat.
-     *
-     * @param message le message envoyé par le joueur.
-     */
-    public void envoyerMessageChat(String message) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(CodeMessage.MESSAGE_CHAT);
-        sb.append((byte) message.length());
-        sb.append(message);
-        envoyerDonnees(sb.toString());
-    }
-
-    private void envoyerDonnees(String donnees) {
-        try {
-            System.out.println(donnees);
-            fluxSortant.writeChars(donnees);
-        } catch (Exception e) {
-            throw new java.lang.Error("Erreur d'envoi de données");
-        }
+    private void envoyerDonnees(byte[] donnees) throws IOException{
+        this.fluxSortant.write(donnees);
     }
 
     public void recevoirDonnees() throws IOException {
@@ -343,7 +175,5 @@ public class Communication implements Runnable {
     public Socket getSocket(){
         return client;
     }
-
-
 
 }

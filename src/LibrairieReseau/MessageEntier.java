@@ -14,11 +14,11 @@ import java.io.IOException;
  */
 public class MessageEntier extends Message {
     
-    int donnees;
+    private int donnees;
     
     public MessageEntier(CodeMessage code, DataInputStream fluxEntrant) throws IOException {
         super(code,fluxEntrant);
-        donnees = fluxEntrant.readInt();
+        donnees = fluxEntrant.readByte();
     }
     
 }

@@ -19,12 +19,9 @@ public class MessageString extends Message {
     public MessageString(CodeMessage code, DataInputStream fluxEntrant) throws IOException {
         super(code,fluxEntrant);
         int taille = fluxEntrant.readByte();
-        donnees = "";
-        System.out.println("test");
-        for(int i=0; i<taille; i++){
-            donnees += fluxEntrant.readChar();
-        }
-        System.out.println(donnees);
+        byte[] intermediaire = new byte[taille];
+        fluxEntrant.read(intermediaire, 0, taille);
+        this.donnees = intermediaire.toString();
     }
     
 }
