@@ -10,6 +10,7 @@ import LibrairieMoteur.ResultatFinDePartie;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -52,42 +53,60 @@ public class Communication implements Runnable {
         }
     }
     
-    public void envoyer(CodeMessage code) throws IOException{
-        byte[] donnees = new byte[1];
-        donnees[0] = code.getCode();
-        envoyerDonnees(donnees);
+    public void envoyer(CodeMessage code){
+        try{
+            byte[] donnees = new byte[1];
+            donnees[0] = code.getCode();
+            envoyerDonnees(donnees);
+        } catch(IOException e){
+            throw new Error("Erreur envoi d'un message");
+        }
     }
     
-    public void envoyerEntier(CodeMessage code, byte entier) throws IOException{
-        byte[] donnees = new byte[2];
-        donnees[0] = code.getCode();
-        donnees[1] = entier;
-        envoyerDonnees(donnees);
+    public void envoyerEntier(CodeMessage code, byte entier){
+        try{
+            byte[] donnees = new byte[2];
+            donnees[0] = code.getCode();
+            donnees[1] = entier;
+            envoyerDonnees(donnees);
+        } catch(IOException e){
+            throw new Error("Erreur envoi d'un message (entier)");
+        }
     }    
     
-    public void envoyerString(CodeMessage code, String chaine) throws IOException{
-        byte[] donnees = new byte[2+chaine.length()];
-        donnees[0] = code.getCode();
-        donnees[1] = (byte) chaine.getBytes("UTF-8").length;
-        int i = 2;
-        for(byte b : chaine.getBytes()){
-            donnees[i] = b;
-            i++;
+    public void envoyerString(CodeMessage code, String chaine){
+        try{
+            byte[] donnees = new byte[2+chaine.length()];
+            donnees[0] = code.getCode();
+            donnees[1] = (byte) chaine.getBytes("UTF-8").length;
+            int i = 2;
+            for(byte b : chaine.getBytes()){
+                donnees[i] = b;
+                i++;
+            }
+            envoyerDonnees(donnees);
+        } catch(UnsupportedEncodingException e){
+            throw new Error("Erreur d'encoage (UTF-8?)");
+        } catch(IOException e){
+            throw new Error("Erreur d'envoi d'un message (string)");
         }
-        envoyerDonnees(donnees);
     }    
     
-    public void envoyerCartes(CodeMessage code, ArrayList<Carte> cartes) throws IOException{
-        byte[] donnees = new byte[2+cartes.size()*2];
-        donnees[0] = code.getCode();
-        donnees[1] = (byte) cartes.size();
-        int i = 2;
-        for(Carte c : cartes){
-            donnees[i] = (byte) c.getValeur().getValeur();
-            donnees[i+1] = (byte) c.getSymbole().getSymbole();
-            i++;
+    public void envoyerCartes(CodeMessage code, ArrayList<Carte> cartes){
+        try{
+            byte[] donnees = new byte[2+cartes.size()*2];
+            donnees[0] = code.getCode();
+            donnees[1] = (byte) cartes.size();
+            int i = 2;
+            for(Carte c : cartes){
+                donnees[i] = (byte) c.getValeur().getValeur();
+                donnees[i+1] = (byte) c.getSymbole().getSymbole();
+                i++;
+            }
+            envoyerDonnees(donnees);
+        } catch(IOException e){
+            throw new Error("Erreur d'envoi d'un message (cartes)");
         }
-        envoyerDonnees(donnees);
     }
     
     private void envoyerDonnees(byte[] donnees) throws IOException{
