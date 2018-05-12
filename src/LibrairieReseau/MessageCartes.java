@@ -33,5 +33,8 @@ public class MessageCartes extends Message{
         }
     }
    
-    
+    @Override
+    public ArrayList<Carte> getDonnees(){
+        return this.donnees;
+    }
 }

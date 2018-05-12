@@ -21,4 +21,8 @@ public class MessageEntier extends Message {
         donnees = fluxEntrant.readByte();
     }
     
+    @Override
+    public Integer getDonnees(){
+        return this.donnees;
+    }
 }

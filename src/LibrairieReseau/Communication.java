@@ -66,9 +66,9 @@ public class Communication implements Runnable {
     }    
     
     public void envoyerString(CodeMessage code, String chaine) throws IOException{
-        byte[] donnees = new byte[1];
+        byte[] donnees = new byte[2+chaine.length()];
         donnees[0] = code.getCode();
-        donnees[1] = (byte) chaine.getBytes().length;
+        donnees[1] = (byte) chaine.getBytes("UTF-8").length;
         int i = 2;
         for(byte b : chaine.getBytes()){
             donnees[i] = b;
@@ -116,6 +116,9 @@ public class Communication implements Runnable {
                     break;
                 case PARTIE_DEMARRER:
                     msg = new Message(code,fluxEntrant);
+                    break;
+                case PARTIE_NBMANCHES:
+                    msg = new MessageEntier(code,fluxEntrant);
                     break;
                 case PSEUDO:
                     msg = new MessageString(code,fluxEntrant);

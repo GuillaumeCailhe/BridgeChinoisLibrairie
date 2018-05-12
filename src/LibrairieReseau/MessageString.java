@@ -7,6 +7,7 @@ package LibrairieReseau;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  *
@@ -21,7 +22,11 @@ public class MessageString extends Message {
         int taille = fluxEntrant.readByte();
         byte[] intermediaire = new byte[taille];
         fluxEntrant.read(intermediaire, 0, taille);
-        this.donnees = intermediaire.toString();
+        this.donnees = new String(intermediaire);
     }
-    
+   
+    @Override
+    public String getDonnees(){
+        return this.donnees;
+    }
 }
