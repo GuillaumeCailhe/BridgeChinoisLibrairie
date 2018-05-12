@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
@@ -28,7 +29,7 @@ public class Communication implements Runnable {
     DataInputStream fluxEntrant;
     DataOutputStream fluxSortant;
 
-    Queue<Message> buffer;
+    ArrayList<Message> buffer;
 
     public Communication(Socket client) {
         this.client = client;
@@ -39,7 +40,7 @@ public class Communication implements Runnable {
             throw new java.lang.Error("Erreur I/O socket");
         }
 
-        this.buffer = new LinkedList<Message>();
+        this.buffer = new ArrayList<Message>();
     }
 
     @Override
@@ -101,7 +102,7 @@ public class Communication implements Runnable {
             for(Carte c : cartes){
                 donnees[i] = (byte) c.getValeur().getValeur();
                 donnees[i+1] = (byte) c.getSymbole().getSymbole();
-                i++;
+                i+=2;
             }
             envoyerDonnees(donnees);
         } catch(IOException e){
@@ -219,12 +220,25 @@ public class Communication implements Runnable {
         return buffer.size();
     }
     
-    public Message getMessage(){
+    // Retourne et supprime le message le plus ancien
+    public Message getPremierMessage(){
         if(buffer.size() > 0){
-            return buffer.remove();
+            return buffer.remove(0);
         } else {
             return null;
         }
+    }
+    
+    // Retourne et supprime du buffer le message le plus ancien ayant ce code
+    public Message getMessageParCode(CodeMessage code){
+        if(buffer.size() > 0){
+            for(int i = 0; i < buffer.size(); i++){
+                if(buffer.get(i).getCode() == code){
+                    return buffer.remove(i);
+                }
+            }
+        }
+        return null;
     }
     
     public Socket getSocket(){
