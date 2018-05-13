@@ -31,8 +31,11 @@ public class Communication implements Runnable {
 
     ArrayList<Message> buffer;
 
-    public Communication(Socket client) {
+    Object notifie;
+    
+    public Communication(Socket client, Object notifie) {
         this.client = client;
+        this.notifie = notifie;
         try {
             this.fluxEntrant = new DataInputStream(client.getInputStream());
             this.fluxSortant = new DataOutputStream(client.getOutputStream());
@@ -213,6 +216,9 @@ public class Communication implements Runnable {
                     throw new Error("Code de message indécodable");
             }
             this.buffer.add(msg);
+            synchronized(this.notifie){
+                this.notifie.notify();    
+            }
         }
     }
     
@@ -245,4 +251,8 @@ public class Communication implements Runnable {
         return client;
     }
 
+    public void setNotifie(Object n){
+        this.notifie = n;
+    }
+    
 }
