@@ -35,16 +35,17 @@ public enum CodeMessage {
     PIOCHER((byte) 18),
     PIOCHER_OK((byte) 19),
     PIOCHER_KO((byte) 20),
+    JOUER_ADVERSAIRE((byte) 21),
     // ACTIONS HORS TEMPS DE JEU
-    CAPITULER_MANCHE((byte) 21),
-    CAPITULER_PARTIE((byte) 22),
-    SAUVEGARDER((byte) 23),
-    SAUVEGARDER_OK((byte) 24),
-    SAUVEGARDER_KO((byte) 25),
-    ANNULER((byte) 26),
-    ANNULER_OK((byte) 27),
-    ANNULER_KO((byte) 28),
-    MESSAGE_CHAT((byte) 29);
+    CAPITULER_MANCHE((byte) 22),
+    CAPITULER_PARTIE((byte) 23),
+    SAUVEGARDER((byte) 24),
+    SAUVEGARDER_OK((byte) 25),
+    SAUVEGARDER_KO((byte) 26),
+    ANNULER((byte) 27),
+    ANNULER_OK((byte) 28),
+    ANNULER_KO((byte) 29),
+    MESSAGE_CHAT((byte) 30);
     
     private byte code;
 

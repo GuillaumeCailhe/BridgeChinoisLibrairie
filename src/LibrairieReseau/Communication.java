@@ -31,11 +31,11 @@ public class Communication implements Runnable {
 
     ArrayList<Message> buffer;
 
-    Object notifie;
+    ArrayList<Object> notifie;
     
-    public Communication(Socket client, Object notifie) {
+    public Communication(Socket client) {
         this.client = client;
-        this.notifie = notifie;
+        this.notifie = new ArrayList<Object>();
         try {
             this.fluxEntrant = new DataInputStream(client.getInputStream());
             this.fluxSortant = new DataOutputStream(client.getOutputStream());
@@ -48,13 +48,20 @@ public class Communication implements Runnable {
 
     @Override
     public void run() {
-        while(true){
-            try {
-                recevoirDonnees();
-            } catch (IOException ex) {
-                Logger.getLogger(Communication.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        new java.util.Timer().schedule( 
+            new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    try {
+                        recevoirDonnees();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Communication.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }, 
+            0,
+            50
+        );        
     }
     
     public void envoyer(CodeMessage code){
@@ -120,6 +127,7 @@ public class Communication implements Runnable {
     public void recevoirDonnees() throws IOException {
         if(fluxEntrant.available() > 0){
             CodeMessage code = CodeMessage.values()[fluxEntrant.readByte()];
+            System.out.println("NOUVEAU MESSAGE: " + code);
             Message msg;
             switch (code) {
                 case PARTIE_JCJ:
@@ -185,6 +193,9 @@ public class Communication implements Runnable {
                 case PIOCHER_KO:
                     msg = new Message(code,fluxEntrant);
                     break;
+                case JOUER_ADVERSAIRE:
+                    msg = new MessageCartes(code,fluxEntrant);
+                    break;
                 case CAPITULER_MANCHE:
                     msg = new Message(code,fluxEntrant);
                     break;
@@ -216,9 +227,12 @@ public class Communication implements Runnable {
                     throw new Error("Code de message indécodable");
             }
             this.buffer.add(msg);
-            synchronized(this.notifie){
-                this.notifie.notify();    
+            for(Object o : this.notifie){
+                synchronized(o){
+                    o.notify();    
+                }      
             }
+
         }
     }
     
@@ -251,8 +265,8 @@ public class Communication implements Runnable {
         return client;
     }
 
-    public void setNotifie(Object n){
-        this.notifie = n;
+    public void addNotifie(Object n){
+        this.notifie.add(n);
     }
     
 }
