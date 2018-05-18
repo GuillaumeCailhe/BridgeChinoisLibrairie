@@ -77,7 +77,7 @@ public class Carte implements Comparable<Carte> {
             } else if(symbole < 0){
                 return -1;
             } else {
-                throw new java.lang.Error("Erreur de comparaison entre " + this.toString() + " et " + c);
+                return 0;
             }
         } else {
             return -1;

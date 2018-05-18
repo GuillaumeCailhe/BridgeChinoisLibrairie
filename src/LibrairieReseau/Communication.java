@@ -121,13 +121,14 @@ public class Communication implements Runnable {
     }
     
     private void envoyerDonnees(byte[] donnees) throws IOException{
+        //System.out.println(CodeMessage.values()[donnees[0]]);
         this.fluxSortant.write(donnees);
     }
 
     public void recevoirDonnees() throws IOException {
         if(fluxEntrant.available() > 0){
             CodeMessage code = CodeMessage.values()[fluxEntrant.readByte()];
-            System.out.println("NOUVEAU MESSAGE: " + code);
+            System.out.println(code);
             Message msg;
             switch (code) {
                 case PARTIE_JCJ:
@@ -166,6 +167,12 @@ public class Communication implements Runnable {
                 case TOUR_KO:
                     msg = new Message(code,fluxEntrant);
                     break;
+                case VICTOIRE_PLI:
+                    msg = new Message(code,fluxEntrant);
+                    break;                
+                case DEFAITE_PLI:
+                    msg = new Message(code,fluxEntrant);
+                    break;
                 case VICTOIRE_MANCHE:
                     msg = new Message(code,fluxEntrant);
                     break;
@@ -194,6 +201,9 @@ public class Communication implements Runnable {
                     msg = new Message(code,fluxEntrant);
                     break;
                 case JOUER_ADVERSAIRE:
+                    msg = new MessageCartes(code,fluxEntrant);
+                    break;
+                case PIOCHER_ADVERSAIRE:
                     msg = new MessageCartes(code,fluxEntrant);
                     break;
                 case CAPITULER_MANCHE:
