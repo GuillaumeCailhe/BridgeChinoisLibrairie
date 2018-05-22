@@ -125,7 +125,7 @@ public class Communication implements Runnable {
         this.fluxSortant.write(donnees);
     }
 
-    public void recevoirDonnees() throws IOException {
+    public synchronized void recevoirDonnees() throws IOException {
         if(fluxEntrant.available() > 0){
             CodeMessage code = CodeMessage.values()[fluxEntrant.readByte()];
             System.out.println(code);
@@ -181,6 +181,9 @@ public class Communication implements Runnable {
                     break;
                 case DEFAITE_MANCHE:
                     msg = new Message(code,fluxEntrant);
+                    break;
+                case ATOUT:
+                    msg = new MessageEntier(code,fluxEntrant);
                     break;
                 case JOUER:
                     msg = new MessageEntier(code,fluxEntrant);

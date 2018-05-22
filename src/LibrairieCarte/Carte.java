@@ -44,21 +44,6 @@ public class Carte implements Comparable<Carte> {
     }
 // </editor-fold>
     
-    /**
-     * 
-     * @return true si la carte est rouge, false sinon
-     */
-    public boolean estRouge(){
-        return (this.symbole == SymboleCarte.CARREAU || this.symbole == SymboleCarte.COEUR);
-    }
-    
-    /**
-     * 
-     * @return true si la carte est noire, false sinon
-     */
-    public boolean estNoire(){
-        return (this.symbole == SymboleCarte.PIQUE || this.symbole == SymboleCarte.TREFLE);
-    }
     
     /**
      * 
@@ -71,10 +56,10 @@ public class Carte implements Comparable<Carte> {
         if(valeur > 0){
             return 1;
         } else if (valeur == 0){
-            int symbole = this.getSymbole().compareTo(c.getSymbole());
-            if(symbole > 0){
+            valeur = this.getSymbole().compareTo(c.getSymbole());
+            if(valeur > 0){
                 return 1;
-            } else if(symbole < 0){
+            } else if(valeur < 0){
                 return -1;
             } else {
                 return 0;

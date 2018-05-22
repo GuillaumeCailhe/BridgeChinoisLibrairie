@@ -31,24 +31,25 @@ public enum CodeMessage {
     EGALITE_MANCHE((byte) 15),
     DEFAITE_MANCHE((byte) 16),
     // ACTION EN JEU CLASSIQUE
-    JOUER((byte) 17),
-    JOUER_OK((byte) 18),
-    JOUER_KO((byte) 19),
-    PIOCHER((byte) 20), 
-    PIOCHER_OK((byte) 21),
-    PIOCHER_KO((byte) 22), 
-    JOUER_ADVERSAIRE((byte) 23), // [carte jouée]
-    PIOCHER_ADVERSAIRE((byte) 24), // [carte piochée, carte retournée]
+    ATOUT((byte) 17),
+    JOUER((byte) 18),
+    JOUER_OK((byte) 19),
+    JOUER_KO((byte) 20),
+    PIOCHER((byte) 21), 
+    PIOCHER_OK((byte) 22),
+    PIOCHER_KO((byte) 23), 
+    JOUER_ADVERSAIRE((byte) 24), // [carte jouée]
+    PIOCHER_ADVERSAIRE((byte) 25), // [carte piochée, carte retournée]
     // ACTIONS HORS TEMPS DE JEU
-    CAPITULER_MANCHE((byte) 24),
-    CAPITULER_PARTIE((byte) 25),
-    SAUVEGARDER((byte) 26),
-    SAUVEGARDER_OK((byte) 27),
-    SAUVEGARDER_KO((byte) 28),
-    ANNULER((byte) 29),
-    ANNULER_OK((byte) 30),
-    ANNULER_KO((byte) 31),
-    MESSAGE_CHAT((byte) 32);
+    CAPITULER_MANCHE((byte) 26),
+    CAPITULER_PARTIE((byte) 27),
+    SAUVEGARDER((byte) 28),
+    SAUVEGARDER_OK((byte) 28),
+    SAUVEGARDER_KO((byte) 29),
+    ANNULER((byte) 30),
+    ANNULER_OK((byte) 31),
+    ANNULER_KO((byte) 32),
+    MESSAGE_CHAT((byte) 33);
     
     private byte code;
 
