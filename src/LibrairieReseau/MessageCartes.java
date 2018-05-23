@@ -27,9 +27,15 @@ public class MessageCartes extends Message{
         ValeurCarte valeurCarte;
         SymboleCarte symboleCarte;
         for(int i = 0; i < taille; i++){
-            valeurCarte = ValeurCarte.values()[fluxEntrant.readByte()];
-            symboleCarte = SymboleCarte.values()[fluxEntrant.readByte()];
-            this.donnees.add(new Carte(valeurCarte,symboleCarte));
+            int val = fluxEntrant.readByte();
+            int symbole = fluxEntrant.readByte();
+            if(val == -1 || symbole == -1){ // null
+                this.donnees.add(null);
+            } else {
+                valeurCarte = ValeurCarte.values()[val];
+                symboleCarte = SymboleCarte.values()[symbole];
+                this.donnees.add(new Carte(valeurCarte,symboleCarte));
+            }
         }
     }
    

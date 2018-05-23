@@ -110,8 +110,13 @@ public class Communication implements Runnable {
             donnees[1] = (byte) cartes.size();
             int i = 2;
             for(Carte c : cartes){
-                donnees[i] = (byte) c.getValeur().getValeur();
-                donnees[i+1] = (byte) c.getSymbole().getSymbole();
+                if(c != null){
+                    donnees[i] = (byte) c.getValeur().getValeur();
+                    donnees[i+1] = (byte) c.getSymbole().getSymbole();
+                } else {
+                    donnees[i] = (byte) -1;
+                    donnees[i] = (byte) -1;
+                }
                 i+=2;
             }
             envoyerDonnees(donnees);
@@ -128,7 +133,7 @@ public class Communication implements Runnable {
     public synchronized void recevoirDonnees() throws IOException {
         if(fluxEntrant.available() > 0){
             CodeMessage code = CodeMessage.values()[fluxEntrant.readByte()];
-            System.out.println(code);
+            //System.out.println(code);
             Message msg;
             switch (code) {
                 case PARTIE_JCJ:
