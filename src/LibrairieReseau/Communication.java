@@ -130,10 +130,10 @@ public class Communication implements Runnable {
         this.fluxSortant.write(donnees);
     }
 
-    public synchronized void recevoirDonnees() throws IOException {
+    public void recevoirDonnees() throws IOException {
         if(fluxEntrant.available() > 0){
             CodeMessage code = CodeMessage.values()[fluxEntrant.readByte()];
-            //System.out.println(code);
+            System.out.println(code);
             Message msg;
             switch (code) {
                 case PARTIE_JCJ:
@@ -245,11 +245,14 @@ public class Communication implements Runnable {
                     throw new Error("Code de message indécodable");
             }
             this.buffer.add(msg);
-            for(Object o : this.notifie){
-                synchronized(o){
-                    o.notify();    
-                }      
+            synchronized(this.notifie){ 
+                for(Object o : this.notifie){
+                    synchronized(o){
+                        o.notify();    
+                    }      
+                }
             }
+           
 
         }
     }

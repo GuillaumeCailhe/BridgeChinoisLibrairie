@@ -16,9 +16,11 @@ public enum SymboleCarte {
     PIQUE(3);
     
     private int symbole;
+    private boolean estAtout;
     
     SymboleCarte(int symbole){
         this.symbole = symbole;
+        this.estAtout = false;
     }   
     
     /**
@@ -27,6 +29,14 @@ public enum SymboleCarte {
      */
     public int getSymbole(){
         return this.symbole;
+    }
+    
+    public boolean estAtout(){
+        return this.estAtout;
+    }
+    
+    public void setAtout(boolean b){
+        this.estAtout = b;
     }
     
     @Override

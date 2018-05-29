@@ -52,20 +52,29 @@ public class Carte implements Comparable<Carte> {
      */
     @Override
     public int compareTo(Carte c) {
-        int valeur = this.getValeur().compareTo(c.getValeur());
-        if(valeur > 0){
+        int valeur;
+        
+        
+        if(this.symbole.estAtout() && !c.symbole.estAtout()){
             return 1;
-        } else if (valeur == 0){
-            valeur = this.getSymbole().compareTo(c.getSymbole());
+        } else if (!this.symbole.estAtout() && c.symbole.estAtout()){
+            return -1;
+        } else {
+            valeur = this.getValeur().compareTo(c.getValeur());
             if(valeur > 0){
                 return 1;
-            } else if(valeur < 0){
-                return -1;
+            } else if (valeur == 0){
+                valeur = this.getSymbole().compareTo(c.getSymbole());
+                if(valeur > 0){
+                    return 1;
+                } else if(valeur < 0){
+                    return -1;
+                } else {
+                    return 0;
+                }
             } else {
-                return 0;
+                return -1;
             }
-        } else {
-            return -1;
         }
     }
     
