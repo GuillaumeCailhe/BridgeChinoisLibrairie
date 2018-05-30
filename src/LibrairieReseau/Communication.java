@@ -33,6 +33,8 @@ public class Communication implements Runnable {
 
     ArrayList<Object> notifie;
     
+    boolean test;
+    
     public Communication(Socket client) {
         this.client = client;
         this.notifie = new ArrayList<Object>();
@@ -44,6 +46,7 @@ public class Communication implements Runnable {
         }
 
         this.buffer = new ArrayList<Message>();
+        test = true;
     }
 
     @Override
@@ -133,7 +136,7 @@ public class Communication implements Runnable {
     public void recevoirDonnees() throws IOException {
         if(fluxEntrant.available() > 0){
             CodeMessage code = CodeMessage.values()[fluxEntrant.readByte()];
-            System.out.println(code);
+            //System.out.println(code);
             Message msg;
             switch (code) {
                 case PARTIE_JCJ:
@@ -245,13 +248,13 @@ public class Communication implements Runnable {
                     throw new Error("Code de message indécodable");
             }
             this.buffer.add(msg);
-            synchronized(this.notifie){ 
-                for(Object o : this.notifie){
-                    synchronized(o){
-                        o.notify();    
-                    }      
-                }
+            test = false;
+            for(Object o : this.notifie){
+                synchronized(o){
+                    o.notify();    
+                }      
             }
+            test = true;
            
 
         }
@@ -287,7 +290,10 @@ public class Communication implements Runnable {
     }
 
     public void addNotifie(Object n){
-        this.notifie.add(n);
+        while(!test){}
+        synchronized(this){
+            this.notifie.add(n);
+        }
     }
     
 }
